@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- 开启缓存和懒加载 -->
+    <settings>
+        <!-- 开启缓存 -->
+        <setting name="cacheEnabled" value="true"/>
+        <!-- 启用懒加载 -->
+        <setting name="lazyLoadingEnabled" value="true"/>
+        <setting name="aggressiveLazyLoading" value="flase"/>
+    </settings>
+    <!-- 配置别名 -->
+    <typeAliases>
+        <package name="magicalzhu.github.io.bean"/>
+    </typeAliases>
+    <!-- 配置分页的插件 -->
+    <plugins>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+    </plugins>
+</configuration>
+

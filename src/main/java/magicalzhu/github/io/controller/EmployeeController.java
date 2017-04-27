@@ -95,8 +95,8 @@ public class EmployeeController {
         employeeService.updateEmp(employee);
         return Msg.success();
     }
-    //查询员工数据(分页查询-->普通的返回方式)
-    /*@RequestMapping(value = "/emps",method = RequestMethod.GET)
+ /*   //查询员工数据(分页查询-->普通的返回方式)
+    @RequestMapping(value = "/emps",method = RequestMethod.GET)
     public String getEmps(@RequestParam(value = "pn",required = false,defaultValue = "1") Integer pn,
                           Map<String,Object> map){
         PageHelper.startPage(pn,5);                      //引入PageHelper,传入页码和每一页的大小

@@ -22,18 +22,18 @@
                   and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
                 </when>
                 <when test="criterion.listValue">
-                  and ${criterion.condition}
-                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
-                    #{listItem}
-                  </foreach>
-                </when>
-              </choose>
-            </foreach>
-          </trim>
+  and ${criterion.condition}
+  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+    #{listItem}
+  </foreach>
+</when>
+        </choose>
+        </foreach>
+        </trim>
         </if>
-      </foreach>
-    </where>
-  </sql>
+        </foreach>
+        </where>
+        </sql>
   <sql id="Update_By_Example_Where_Clause">
     <where>
       <foreach collection="example.oredCriteria" item="criteria" separator="or">

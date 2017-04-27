@@ -17,7 +17,10 @@
     </typeAliases>
     <!-- 配置分页的插件 -->
     <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+                <!--配置合理化分页属性,当传递的页码超过总的页码数,直接访问最后一页-->
+            <property name="reasonable" value="true"></property>
+        </plugin>
     </plugins>
 </configuration>
 

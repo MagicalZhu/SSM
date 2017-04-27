@@ -46,4 +46,9 @@ public class EmployeeService {
     public void updateEmp(Employee employee) {
         employeeMapper.updateByPrimaryKeySelective(employee);
     }
+    // 删除 : 单个的删除,按照员工的id删除员工的信息
+    @Transactional(readOnly = false)
+    public void deleteById(Integer id) {
+        employeeMapper.deleteByPrimaryKey(id);
+    }
 }

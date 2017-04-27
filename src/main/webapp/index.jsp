@@ -127,7 +127,7 @@
     <div class="row">        <!--按钮-->
         <div class="col-md-4 col-md-offset-10">
             <button class="btn btn-primary btn-sm" id="emp_add_modal_btn">添加</button>
-            <button class="btn btn-danger btn-sm">删除</button>
+            <button class="btn btn-danger btn-sm" >删除</button>
         </div>
     </div>
     <p></p>
@@ -433,6 +433,23 @@ $("#emp_update_btn").click(function () {
             to_page(currentPage);                               //返回当前的页面(就是为了刷新当前的页面信息)
         }
     });
+});
+
+/*删除单个员工的信息,按照id删除*/
+$(document).on("click",".delete_btn",function () {
+    var empName=$(this).parents("tr").find("td:eq(1)").text();          //获取要删除的员工姓名
+    var empId=$(this).attr("del-id");                                   //获取要删除的员工的id
+    var flag=confirm("确定要删除"+empName+"吗?");
+    if(flag){
+        $.ajax({
+            url:"${pageContext.request.contextPath}/emp/"+empId,
+            type:"DELETE",
+            success:function(result){
+                alert(result.msg);
+                to_page(currentPage);
+            }
+        });
+    }
 });
 </script>
 </body>

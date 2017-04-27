@@ -95,6 +95,13 @@ public class EmployeeController {
         employeeService.updateEmp(employee);
         return Msg.success();
     }
+    // 删除 : 删除单个的员工信息,按照员工的id删除员工的信息
+    @ResponseBody
+    @RequestMapping(value = "/emp/{id}",method = RequestMethod.DELETE)
+    public Msg deleteEmpById(@PathVariable("id") Integer id){
+        employeeService.deleteById(id);
+        return Msg.success();
+    }
  /*   //查询员工数据(分页查询-->普通的返回方式)
     @RequestMapping(value = "/emps",method = RequestMethod.GET)
     public String getEmps(@RequestParam(value = "pn",required = false,defaultValue = "1") Integer pn,

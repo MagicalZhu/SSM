@@ -38,17 +38,29 @@ public class EmployeeService {
         long count=employeeMapper.countByExample(example);
         return  count==0;
     }
+
     @Transactional(readOnly = true)
     public Employee getEmpById(Integer id) {
         return employeeMapper.selectByPrimaryKeyWithDept(id);
     }
+
     @Transactional(readOnly = false)
     public void updateEmp(Employee employee) {
         employeeMapper.updateByPrimaryKeySelective(employee);
     }
+
     // 删除 : 单个的删除,按照员工的id删除员工的信息
     @Transactional(readOnly = false)
     public void deleteById(Integer id) {
         employeeMapper.deleteByPrimaryKey(id);
+    }
+
+    // 删除 : 批量的删除,按照员工的id
+    @Transactional(readOnly = false)
+    public void deleteBatch(List<Integer> del_ids) {
+        EmployeeExample employeeExample=new EmployeeExample();
+        EmployeeExample.Criteria criteria=employeeExample.createCriteria();
+        criteria.andEmpIdIn(del_ids);
+        employeeMapper.deleteByExample(employeeExample);
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -95,13 +96,31 @@ public class EmployeeController {
         employeeService.updateEmp(employee);
         return Msg.success();
     }
-    // 删除 : 删除单个的员工信息,按照员工的id删除员工的信息
+/*    // 删除 : 删除单个的员工信息,按照员工的id删除员工的信息
     @ResponseBody
     @RequestMapping(value = "/emp/{id}",method = RequestMethod.DELETE)
     public Msg deleteEmpById(@PathVariable("id") Integer id){
         employeeService.deleteById(id);
         return Msg.success();
+    }*/
+    // 删除 ：批量删除和单个删除合并在一起
+@ResponseBody
+@RequestMapping(value = "/emp/{ids}",method = RequestMethod.DELETE)
+public Msg deleteEmpById(@PathVariable("ids") String ids){
+    if(ids.contains("-")){
+        List<Integer> del_ids=new ArrayList<>();
+        String[] str_ids=ids.split("-");        //将页面传递的多个id按照"-"切割成String的数组
+        for (String string: str_ids) {
+            del_ids.add(Integer.parseInt(string));     //将遍历得到的每一个String类型的id转化为Integer类型放在集合中,
+        }
+        employeeService.deleteBatch(del_ids);
+        return Msg.success();
+    }else{
+        employeeService.deleteById(Integer.parseInt(ids));      //这种情况是单个删除
+        return Msg.success();
     }
+}
+
  /*   //查询员工数据(分页查询-->普通的返回方式)
     @RequestMapping(value = "/emps",method = RequestMethod.GET)
     public String getEmps(@RequestParam(value = "pn",required = false,defaultValue = "1") Integer pn,

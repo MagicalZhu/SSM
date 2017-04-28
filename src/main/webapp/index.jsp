@@ -127,7 +127,7 @@
     <div class="row">        <!--按钮-->
         <div class="col-md-4 col-md-offset-10">
             <button class="btn btn-primary btn-sm" id="emp_add_modal_btn">添加</button>
-            <button class="btn btn-danger btn-sm" >删除</button>
+            <button class="btn btn-danger btn-sm" id="emp_delete_all_btn">删除</button>
         </div>
     </div>
     <p></p>
@@ -136,6 +136,9 @@
             <table class="table table-hover" id="emps_table">
                 <thead>
                     <tr>
+                        <th>
+                            <input type="checkbox" id="check_all"/>
+                        </th>
                         <th>ID</th>
                         <th>empName</th>
                         <th>gender</th>
@@ -244,6 +247,7 @@ function build_emps_tables(result){
     var emps=result.extend.pageInfo.list;      //获取json数据中的所有员工信息
     $.each(emps,function (index,item) {       //使用JQuery中的$.each()函数遍历所有的员工信息
         //创建员工信息节点
+        var checkBoxTd = $("<td><input type='checkbox' class='check_item'/></td>");
         var empIdTd=$("<td></td>").append(item.empId);
         var empNameTd = $("<td></td>").append(item.empName);
         var genderTd = $("<td></td>").append(item.gender=='M'?"男":"女");
@@ -257,7 +261,7 @@ function build_emps_tables(result){
         editBtn.attr("edit-id",item.empId);
         delBtn.attr("del-id",item.empId);
         var btnTd = $("<td></td>").append(editBtn).append(" ").append(delBtn);
-        $("<tr></tr>").append(empIdTd).append(empNameTd).append(genderTd).append(emailTd).append(deptNameTd)
+        $("<tr></tr>").append(checkBoxTd).append(empIdTd).append(empNameTd).append(genderTd).append(emailTd).append(deptNameTd)
                       .append(btnTd)
                       .appendTo("#emps_table tbody");
     });
@@ -437,7 +441,7 @@ $("#emp_update_btn").click(function () {
 
 /*删除单个员工的信息,按照id删除*/
 $(document).on("click",".delete_btn",function () {
-    var empName=$(this).parents("tr").find("td:eq(1)").text();          //获取要删除的员工姓名
+    var empName=$(this).parents("tr").find("td:eq(2)").text();          //获取要删除的员工姓名
     var empId=$(this).attr("del-id");                                   //获取要删除的员工的id
     var flag=confirm("确定要删除"+empName+"吗?");
     if(flag){
@@ -445,6 +449,42 @@ $(document).on("click",".delete_btn",function () {
             url:"${pageContext.request.contextPath}/emp/"+empId,
             type:"DELETE",
             success:function(result){
+                alert(result.msg);
+                to_page(currentPage);
+            }
+        });
+    }
+});
+/* 全选以及全不选 */
+$("#check_all").click(function () {
+    //alert($(this).prop("checked"))        //prop修改和读取dom原生属性的值,attr获取自定义属性的值
+    var flag=$(this).prop("checked");
+    $(".check_item").prop("checked",flag);
+});
+/*当前页面上的员工数据前面所有的checkbox按钮被选中,全选按钮也被选中*/
+$(document).on("click",".check_item",function () {
+   //判断当前页面上的checkbox是不是全部被选中!
+    var flag=$(".check_item:checked").length==$(".check_item").length;
+    $("#check_all").prop("checked",flag);
+});
+/* 批量删除 */
+$("#emp_delete_all_btn").click(function () {
+    var empNames  = "";
+    var del_idstr = "";
+    //遍历每一个checkbox被选中的按钮
+    $.each($(".check_item:checked"),function () {
+        empNames += $(this).parents("tr").find("td:eq(2)").text()+",";          //组装选中的员工的empName和empId
+        del_idstr += $(this).parents("tr").find("td:eq(1)").text()+"-";
+    });
+    //去除empNames多余的" , "
+    empNames = empNames.substring(0, empNames.length-1);
+    //去除删除的id多余的" - "
+    del_idstr = del_idstr.substring(0, del_idstr.length-1);
+    if(confirm("确认删除["+empNames+"]吗？")){
+        $.ajax({
+            url:"${pageContext.request.contextPath}/emp/"+del_idstr,
+            type:"DELETE",
+            success:function (result) {
                 alert(result.msg);
                 to_page(currentPage);
             }
